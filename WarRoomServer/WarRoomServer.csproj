@@ -16,8 +16,4 @@
     <ProjectReference Include="..\..\AGVSystemCommonNet6\AGVSystemCommonNet6.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>
