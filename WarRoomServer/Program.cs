@@ -33,6 +33,7 @@ builder.Services.AddSqlServer<WarRoomDbContext>(_connectionString); // 注入資
 builder.Services.AddScoped<DataCacheService>();
 //builder.Services.AddHostedService<DataBaseMigrateService>(); // 開發時使用，不要在生產環境使用
 builder.Services.AddHostedService<RealTimeDataCacheService>(); // Realtime 數據緩存服務
+builder.Services.AddScoped<VersionService>();
 
 var app = builder.Build();
 

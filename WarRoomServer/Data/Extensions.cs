@@ -2,6 +2,8 @@
 using AGVSystemCommonNet6.DATABASE;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using WarRoomServer.Data.Contexts;
+using WarRoomServer.Data.Entities;
 using WarRoomServer.View;
 using static WarRoomServer.View.AlarmStates;
 
@@ -9,6 +11,23 @@ namespace WarRoomServer.Data
 {
     public static class Extensions
     {
+
+        public static async Task<Dictionary<FieldInfo, AGVSDbContext>> GetFieldsDbContext(this WarRoomDbContext warRoomDb)
+        {
+            List<Entities.FieldInfo> fieldsInfoList = warRoomDb.Fields.AsNoTracking().ToList();
+            Dictionary<FieldInfo, AGVSDbContext> dbContexts = new();
+            foreach (Entities.FieldInfo field in fieldsInfoList)
+            {
+                string DataBaseName = field.DataBaseName;
+                string _connectstring = $"Server=localhost;Database={DataBaseName};User Id=sa;Password=12345678;";
+                var optionsBuilder = new DbContextOptionsBuilder<AGVSDbContext>();
+                optionsBuilder.UseSqlServer(_connectstring);
+                AGVSDbContext _context = new AGVSDbContext(optionsBuilder.Options, true);
+                dbContexts.Add(field, _context);
+            }
+            return dbContexts;
+        }
+
         public static async Task<string> GetAGVOnlineState(this AGVSDbContext context, string AGVName)
         {
             AGVSystemCommonNet6.clsAGVStateDto? agvState = context.AgvStates.AsNoTracking().FirstOrDefault(a => a.AGV_Name == AGVName);
